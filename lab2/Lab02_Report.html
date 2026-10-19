@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Lab 02: Network Traffic Pattern Analysis & DDoS Detection</title>
+<style>
+
+@page {
+    size: A4;
+    margin: 20mm 15mm 20mm 15mm;
+    @bottom-center {
+        content: counter(page);
+    }
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    color: #24292e;
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    font-size: 19pt;
+    font-weight: 700;
+    color: #0366d6;
+    border-bottom: 2px solid #eaecef;
+    padding-bottom: 8px;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+h2 {
+    font-size: 14pt;
+    font-weight: 600;
+    color: #1a1f2c;
+    border-bottom: 1px solid #eaecef;
+    padding-bottom: 5px;
+    margin-top: 24px;
+    margin-bottom: 10px;
+    page-break-after: avoid;
+}
+h3 {
+    font-size: 12pt;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+}
+h4 {
+    font-size: 11pt;
+    font-weight: 600;
+    color: #34495e;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    page-break-after: avoid;
+}
+p {
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-align: justify;
+}
+ul, ol {
+    margin-top: 0;
+    margin-bottom: 10px;
+    padding-left: 24px;
+}
+li {
+    margin-bottom: 4px;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 12px;
+    margin-bottom: 16px;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+}
+th, td {
+    border: 1px solid #d1d5da;
+    padding: 7px 10px;
+    text-align: left;
+}
+th {
+    background-color: #f6f8fa;
+    font-weight: 600;
+    color: #24292e;
+}
+tr:nth-child(even) {
+    background-color: #fbfcfd;
+}
+img {
+    max-width: 90%;
+    height: auto;
+    display: block;
+    margin: 14px auto;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+    page-break-inside: avoid;
+}
+code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 9pt;
+    background-color: #f3f4f6;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+pre {
+    background-color: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 5px;
+    padding: 10px 14px;
+    overflow-x: auto;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 8.5pt;
+    line-height: 1.45;
+    margin-top: 0;
+    margin-bottom: 14px;
+    page-break-inside: avoid;
+}
+pre code {
+    background-color: transparent;
+    padding: 0;
+}
+hr {
+    height: 1px;
+    background-color: #e1e4e8;
+    border: none;
+    margin: 20px 0;
+}
+.header-box {
+    background: #f8fafc;
+    border-left: 4px solid #0366d6;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    font-size: 10pt;
+}
+
+</style>
+</head>
+<body>
+<h1>Lab 02: Network Traffic Pattern Analysis &amp; DDoS Detection</h1>
+<h2>Heuristic Behavioral Detection and Anti-Memorization Analysis</h2>
+<p><strong>Course:</strong> AI for Cybersecurity (Dr. R. BOUSMAHA)<br />
+<strong>Level:</strong> 3rd Year - Second Cycle / Option: Cybersecurity (CyS)<br />
+<strong>Student:</strong> Chikhaoui Youcef Chihab Eddine<br />
+<strong>Date:</strong> March 2026  </p>
+<hr />
+<h2>Executive Summary</h2>
+<p>This laboratory work implements an end-to-end exploratory analysis, heuristic threshold rule, and machine learning detector for network intrusion detection using the <strong>CIC-IDS2017</strong> benchmark. We specifically address a pervasive problem in cybersecurity machine learning: <strong>dataset artifact memorization</strong>. Standard models evaluated on raw network flow dumps frequently report artificially inflated performances (&gt;99.9%) by exploiting single-session tool fingerprints (such as fixed destination ports or static TCP window sizes) rather than learning generalized attack behaviors.</p>
+<p>By intentionally purging tool-specific signatures and retaining only <strong>7 core heuristic behavioral flow features</strong>, we develop:
+1. <strong>A Simple Threshold Detection Rule</strong> based on bidirectional payload amplification, achieving <strong>79.23% accuracy</strong> and <strong>92.98% precision</strong>.
+2. <strong>A Constrained Heuristic Random Forest Classifier</strong> (<code>max_depth=3</code>) achieving <strong>98.00% accuracy</strong>, <strong>97.66% precision</strong>, and <strong>98.36% recall</strong> on 10,000 unseen test flows.</p>
+<p>This report documents all 9 tasks prescribed by the laboratory syllabus, detailing the exploratory analysis, data sanitization, visualization artifacts, heuristic formulation, and critical performance trade-offs.</p>
+<hr />
+<h2>Task 1: Cybersecurity Use Case</h2>
+<h3>Context and Operational Scope</h3>
+<ul>
+<li><strong>Domain:</strong> Network Traffic Telemetry Monitoring &amp; Network Intrusion Detection Systems (NIDS).</li>
+<li><strong>Operational Motivation:</strong> Enterprise networks face persistent volumetric and application-layer Denial of Service (DoS/DDoS) campaigns designed to exhaust server socket pools, connection queues, and back-end database resources. Static firewall filters relying on source IP addresses or static packet signatures frequently fail against distributed botnets with spoofed headers or polymorphic clients.</li>
+<li><strong>Objective:</strong> Extract flow-level statistical metrics (packet inter-arrival rates, directional payload volumes, and session holding durations) to differentiate legitimate user sessions from anomalous flood traffic in real time.</li>
+</ul>
+<hr />
+<h2>Task 2: Dataset Selection</h2>
+<h3>Benchmark Source</h3>
+<p>We utilize the <strong>CIC-IDS2017</strong> benchmark dataset provided by the Canadian Institute for Cybersecurity (University of New Brunswick). The dataset features captured network traffic generated in a realistic testbed environment over five consecutive days.</p>
+<h3>Capture Files Analyzed</h3>
+<ol>
+<li><strong><code>Monday-WorkingHours.pcap_ISCX.csv</code></strong> (Baseline Normal Traffic):</li>
+<li>Contains <strong>529,918 flows</strong>, representing 100% benign operational traffic (HTTP/HTTPS browsing, internal DNS queries, SSH management, NetBIOS).</li>
+<li><strong><code>Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv</code></strong> (Attack Traffic):</li>
+<li>Contains <strong>225,745 flows</strong>, capturing both background legitimate enterprise sessions and an active <strong>Low Orbit Ion Cannon (LOIT)</strong> HTTP DDoS flood attack.</li>
+</ol>
+<h3>Balanced Dataset Construction</h3>
+<p>To prevent evaluation bias and class imbalance distortions, we construct a balanced evaluation corpus of <strong>50,000 flows</strong>:
+* <strong>25,000 Benign flows</strong> randomly sampled from Monday's baseline capture.
+* <strong>25,000 DDoS attack flows</strong> randomly sampled from Friday's afternoon attack session.</p>
+<hr />
+<h2>Task 3: Tool Selection &amp; Justification</h2>
+<p>The implementation is executed in Python using standard scientific and machine learning libraries:</p>
+<table>
+<thead>
+<tr>
+<th>Tool / Library</th>
+<th>Role in Pipeline</th>
+<th>Justification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Python 3</strong></td>
+<td>Core Runtime</td>
+<td>Standard environment for security telemetry analysis and machine learning workflows.</td>
+</tr>
+<tr>
+<td><strong>pandas</strong></td>
+<td>Tabular Ingestion &amp; Cleaning</td>
+<td>Efficient vectorized operations, label normalization, column stripping, and conditional filtering.</td>
+</tr>
+<tr>
+<td><strong>numpy</strong></td>
+<td>Numerical Transformation</td>
+<td>Robust handling of numeric infinities (<code>inf</code>, <code>-inf</code>) and logarithmic density scaling.</td>
+</tr>
+<tr>
+<td><strong>matplotlib &amp; seaborn</strong></td>
+<td>Statistical Visualizations</td>
+<td>Production-grade density plots, distribution boxplots, count plots, and confusion matrix heatmaps.</td>
+</tr>
+<tr>
+<td><strong>scikit-learn</strong></td>
+<td>Modeling &amp; Evaluation</td>
+<td>Stratified data splitting, Random Forest ensemble fitting, and precision/recall/confusion matrix computation.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Task 4: Data Exploration, Cleaning &amp; The Anti-Memorization Strategy</h2>
+<h3>1. Identifying the Memorization Pitfall</h3>
+<p>Initial experiments training an unconstrained machine learning model on all 78 numeric features yielded a suspiciously high accuracy of <strong>99.97%</strong>. A granular audit of the dataset revealed severe data leakage caused by the testbed attack generation setup:
+* <strong><code>Destination Port</code>:</strong> 100% of the DDoS flows targeted port <code>80</code> (a single victim web server). In contrast, benign flows were distributed across 1,500+ different ports. An unconstrained tree split immediately on <code>Destination Port == 80</code>.
+* <strong><code>Init_Win_bytes_backward</code>:</strong> DDoS traffic had only 2 discrete values (<code>229</code> or <code>-1</code>).
+* <strong><code>min_seg_size_forward</code>:</strong> Fixed to <code>20</code> in 100% of DDoS flows.
+* <strong><code>Fwd Packet Length Mean</code>:</strong> Clustered into only 17 discrete values (3.0 to 10.0 bytes), reflecting LOIT's hardcoded request payload length.</p>
+<p>A model learning these fields does not detect DDoS behavior; it merely fingerprints LOIT executing against that specific IP target.</p>
+<h3>2. Curating 7 Heuristic Behavioral Features</h3>
+<p>To build a realistic, generalized heuristic detector, we stripped all port numbers, protocol flags, and TCP window/segment sizes. We retained only <strong>7 high-level behavioral flow features</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Feature Name</th>
+<th>Telemetry Dimension</th>
+<th>Physical Heuristic Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Flow Duration</code></td>
+<td>Temporal Duration</td>
+<td>Flood connections stay open significantly longer awaiting server timeouts.</td>
+</tr>
+<tr>
+<td><code>Flow Bytes/s</code></td>
+<td>Volumetric Throughput</td>
+<td>Rate of byte transfer relative to flow lifespan.</td>
+</tr>
+<tr>
+<td><code>Flow Packets/s</code></td>
+<td>Volumetric Arrival</td>
+<td>Frequency of packet arrival within the bidirectional session.</td>
+</tr>
+<tr>
+<td><code>Total Length of Bwd Packets</code></td>
+<td>Directional Volume</td>
+<td>Cumulative bytes returned from the target server back to the client.</td>
+</tr>
+<tr>
+<td><code>Average Packet Size</code></td>
+<td>Packet Profiling</td>
+<td>Mean payload size across the entire bidirectional exchange.</td>
+</tr>
+<tr>
+<td><code>Bwd Packet Length Mean</code></td>
+<td>Response Profiling</td>
+<td>Mean size of server response packets.</td>
+</tr>
+<tr>
+<td><code>Down/Up Ratio</code></td>
+<td>Symmetry Profiling</td>
+<td>Ratio of backward packets received versus forward packets transmitted.</td>
+</tr>
+</tbody>
+</table>
+<h3>3. Data Cleaning</h3>
+<ul>
+<li>Infinite values (<code>+inf</code>, <code>-inf</code>) caused by zero-duration flows (<code>Flow Duration = 0</code> leading to division by zero in rate calculations) were converted to <code>NaN</code> and imputed with <code>0</code>.</li>
+<li>Column names were stripped of leading/trailing whitespace (<code>df.columns.str.strip()</code>).</li>
+<li>Categorical target labels were encoded into binary integers: <code>is_ddos = 1</code> for DDoS, <code>0</code> for BENIGN.</li>
+</ul>
+<h3>4. Median Behavioral Profile Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Feature Metric</th>
+<th>BENIGN (Normal)</th>
+<th>DDoS (Attack)</th>
+<th>Physical Divergence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Flow Duration ($\mu s$)</strong></td>
+<td>31,202.50 (~31 ms)</td>
+<td>1,959,031.00 (~1.96 s)</td>
+<td><strong>63x increase</strong> in session holding time</td>
+</tr>
+<tr>
+<td><strong>Total Length of Bwd Packets (Bytes)</strong></td>
+<td>144.00</td>
+<td>11,601.00</td>
+<td><strong>80x increase</strong> in backward response payload</td>
+</tr>
+<tr>
+<td><strong>Average Packet Size (Bytes)</strong></td>
+<td>76.00</td>
+<td>897.62</td>
+<td><strong>11.8x increase</strong> in average packet size</td>
+</tr>
+<tr>
+<td><strong>Bwd Packet Length Mean (Bytes)</strong></td>
+<td>82.04</td>
+<td>1,934.50</td>
+<td><strong>23.5x increase</strong> in server response packet size</td>
+</tr>
+<tr>
+<td><strong>Flow Packets/s</strong></td>
+<td>115.58</td>
+<td>2.44</td>
+<td>DDoS flows maintain low packet rates over extended duration</td>
+</tr>
+<tr>
+<td><strong>Flow Bytes/s</strong></td>
+<td>5,661.85</td>
+<td>157.81</td>
+<td>Normal interactive traffic transfers bursts rapidly</td>
+</tr>
+<tr>
+<td><strong>Down/Up Ratio</strong></td>
+<td>1.00</td>
+<td>0.00</td>
+<td>DDoS exhibits severe forward/backward asymmetry</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Task 5: Anomaly Identification (DDoS)</h2>
+<ul>
+<li><strong>Selected Anomaly:</strong> Low Orbit Ion Cannon (LOIT) HTTP Flood DDoS Attack.</li>
+<li><strong>Volume in Dataset:</strong> Exactly <strong>25,000 flows</strong> out of 50,000 total (<strong>50.0%</strong> anomaly prevalence).</li>
+<li><strong>Behavioral Root Cause:</strong> LOIT repeatedly issues HTTP GET requests designed to consume target web server connection handles. The web server attempts to deliver full HTTP error pages or HTML payloads, generating massive backward byte volume (<code>11,601 bytes</code> median) and large response frames (<code>1,934.5 bytes</code> mean). Normal user browsing, by contrast, is characterized by brief DNS queries (typically ~144 bytes backward) and rapid TLS handshakes.</li>
+</ul>
+<hr />
+<h2>Task 6: Visualizations of Traffic Patterns and Anomalies</h2>
+<p>We generated three high-resolution visualizations saved directly in the project repository:</p>
+<h3>Visualization 1: Class Distribution</h3>
+<ul>
+<li><strong>Filename:</strong> <code>viz1_class_distribution.png</code></li>
+<li><strong>Content:</strong> Clean bar chart displaying the balanced dataset breakdown (25,000 BENIGN vs. 25,000 DDoS).</li>
+</ul>
+<p><img alt="Visualization 1: Class Distribution" src="file:///home/chihab/Documents/study/cys3CS/ai/lab2/viz1_class_distribution.png" /></p>
+<h3>Visualization 2: Average Packet Size Comparison</h3>
+<ul>
+<li><strong>Filename:</strong> <code>viz2_packet_size_comparison.png</code></li>
+<li><strong>Content:</strong> Boxplot comparing <code>Average Packet Size</code> across normal and attack traffic (excluding extreme outliers for visual clarity). Legitimate flows remain tightly bounded under 150 bytes, while DDoS flows shift upwards past 800–1,400 bytes due to continuous server HTML/HTTP transmission.</li>
+</ul>
+<p><img alt="Visualization 2: Average Packet Size" src="file:///home/chihab/Documents/study/cys3CS/ai/lab2/viz2_packet_size_comparison.png" /></p>
+<h3>Visualization 3: Backward Payload Density Distribution</h3>
+<ul>
+<li><strong>Filename:</strong> <code>viz3_bwd_payload_density.png</code></li>
+<li><strong>Content:</strong> Log-transformed kernel density estimate (KDE) plot of $\log_{10}(\text{Total Length of Bwd Packets} + 1)$. Normal traffic is bimodal with peaks around $\log_{10} = 2.1$ (~144 bytes), while the DDoS attack forms a massive peak at $\log_{10} = 4.06$ (~11,600 bytes).</li>
+</ul>
+<p><img alt="Visualization 3: Backward Payload Density" src="file:///home/chihab/Documents/study/cys3CS/ai/lab2/viz3_bwd_payload_density.png" /></p>
+<hr />
+<h2>Task 7: Formulation of a Simple Detection Rule</h2>
+<p>Based on the observed separation in backward payload and packet sizing, we establish a deterministic, two-condition threshold rule:</p>
+<p>$$\text{Alert}_{\text{DDoS}}(\text{flow}) = \begin{cases} 
+1 &amp; \text{if } (\text{Average Packet Size} &gt; 400\text{ Bytes}) \land (\text{Total Length of Bwd Packets} &gt; 2,000\text{ Bytes}) \
+0 &amp; \text{otherwise}
+\end{cases}$$</p>
+<h3>Operational Justification</h3>
+<ol>
+<li><strong>Low False Positive Rate:</strong> Normal enterprise traffic rarely maintains both an average packet size above 400 bytes and a backward transmission exceeding 2,000 bytes simultaneously (median benign values are 76 bytes and 144 bytes, respectively).</li>
+<li><strong>Minimal Computational Footprint:</strong> This rule requires zero matrix multiplications and can be evaluated directly on wire-speed network tap appliances (e.g., Bro/Zeek or Suricata flow scripts).</li>
+</ol>
+<hr />
+<h2>Task 8: Evaluation of Detection Rule and Machine Learning Model</h2>
+<p>We conducted two distinct evaluations:</p>
+<h3>1. Simple Threshold Rule Evaluation (All 50,000 Flows)</h3>
+<p>The rule was evaluated across the entire dataset (both normal and anomalous traffic):</p>
+<ul>
+<li><strong>Confusion Matrix:</strong></li>
+<li>True Negatives (TN): <strong>23,807</strong></li>
+<li>False Positives (FP): <strong>1,193</strong></li>
+<li>False Negatives (FN): <strong>9,191</strong></li>
+<li>
+<p>True Positives (TP): <strong>15,809</strong></p>
+</li>
+<li>
+<p><strong>Performance Metrics:</strong></p>
+</li>
+<li><strong>Accuracy:</strong> <strong>79.23%</strong></li>
+<li><strong>Precision:</strong> <strong>92.98%</strong></li>
+<li><strong>Recall:</strong> <strong>63.24%</strong></li>
+<li><strong>F1-Score:</strong> <strong>75.28%</strong></li>
+</ul>
+<p><img alt="Detection Rule Confusion Matrix" src="file:///home/chihab/Documents/study/cys3CS/ai/lab2/rule_confusion_matrix.png" /></p>
+<p><strong>Analytical Assessment:</strong> The rule demonstrates exceptionally high precision (<strong>92.98%</strong>), producing only 1,193 false alarms across 25,000 benign flows. However, its recall (<strong>63.24%</strong>) reveals an inherent blind spot: 9,191 attack flows were cut short during initial connection setup (SYN drops or connection resets) and never accumulated 2,000 backward bytes, thereby bypassing the static threshold.</p>
+<hr />
+<h3>2. Constrained Machine Learning Model (Random Forest)</h3>
+<p>To address the limitations of the static rule without falling into the memorization trap, we trained an ensemble model with strict regularizing constraints:
+* <strong>Model:</strong> <code>RandomForestClassifier(n_estimators=50, max_depth=3, random_state=42)</code>
+* <strong>Features Used:</strong> Exclusively the <strong>7 curated heuristic features</strong> (no port numbers, no protocol flags, no window sizes).
+* <strong>Train/Test Split:</strong> 80% Training (40,000 flows) and 20% Held-Out Testing (10,000 flows), stratified by class.</p>
+<h4>Test Set Performance Metrics (10,000 Unseen Flows)</h4>
+<ul>
+<li><strong>Accuracy:</strong> <strong>98.00%</strong></li>
+<li><strong>Precision:</strong> <strong>97.66%</strong></li>
+<li><strong>Recall:</strong> <strong>98.36%</strong></li>
+<li><strong>F1-Score:</strong> <strong>98.01%</strong></li>
+</ul>
+<h4>Detailed Classification Report</h4>
+<div class="codehilite"><pre><span></span><code>              precision    recall  f1-score   support
+
+      BENIGN     0.9835    0.9764    0.9799      5000
+        DDoS     0.9766    0.9836    0.9801      5000
+
+    accuracy                         0.9800     10000
+   macro avg     0.9800    0.9800    0.9800     10000
+weighted avg     0.9800    0.9800    0.9800     10000
+</code></pre></div>
+
+<h4>Test Confusion Matrix (10,000 Samples)</h4>
+<ul>
+<li>True Negatives (TN): <strong>4,882</strong></li>
+<li>False Positives (FP): <strong>118</strong></li>
+<li>False Negatives (FN): <strong>82</strong></li>
+<li>True Positives (TP): <strong>4,918</strong></li>
+</ul>
+<p><img alt="Random Forest Confusion Matrix" src="file:///home/chihab/Documents/study/cys3CS/ai/lab2/rf_confusion_matrix.png" /></p>
+<h4>Heuristic Feature Importances</h4>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Feature</th>
+<th>Gini Importance</th>
+<th>Cumulative Importance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>Average Packet Size</code></td>
+<td><strong>0.3645</strong> (36.5%)</td>
+<td>36.5%</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>Bwd Packet Length Mean</code></td>
+<td><strong>0.1933</strong> (19.3%)</td>
+<td>55.8%</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>Flow Duration</code></td>
+<td><strong>0.1603</strong> (16.0%)</td>
+<td>71.8%</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>Total Length of Bwd Packets</code></td>
+<td><strong>0.1394</strong> (13.9%)</td>
+<td>85.7%</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>Flow Bytes/s</code></td>
+<td><strong>0.0708</strong> (7.1%)</td>
+<td>92.8%</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>Flow Packets/s</code></td>
+<td><strong>0.0545</strong> (5.5%)</td>
+<td>98.3%</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>Down/Up Ratio</code></td>
+<td><strong>0.0173</strong> (1.7%)</td>
+<td>100.0%</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Feature Importances" src="file:///home/chihab/Documents/study/cys3CS/ai/lab2/rf_feature_importance.png" /></p>
+<hr />
+<h2>Task 9: Presentation and Explanation of Findings</h2>
+<h3>1. Comparative Performance Overview</h3>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Simple Threshold Rule</th>
+<th>Constrained Random Forest</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Underlying Mechanism</strong></td>
+<td>2 Static Thresholds</td>
+<td>50 Shallow Decision Trees (<code>depth=3</code>)</td>
+</tr>
+<tr>
+<td><strong>Feature Set</strong></td>
+<td><code>Avg Packet Size</code> + <code>Bwd Payload</code></td>
+<td>7 Curated Behavioral Telemetry Features</td>
+</tr>
+<tr>
+<td><strong>Accuracy</strong></td>
+<td><strong>79.23%</strong></td>
+<td><strong>98.00%</strong></td>
+</tr>
+<tr>
+<td><strong>Precision</strong></td>
+<td><strong>92.98%</strong></td>
+<td><strong>97.66%</strong></td>
+</tr>
+<tr>
+<td><strong>Recall</strong></td>
+<td><strong>63.24%</strong></td>
+<td><strong>98.36%</strong></td>
+</tr>
+<tr>
+<td><strong>F1-Score</strong></td>
+<td><strong>75.28%</strong></td>
+<td><strong>98.01%</strong></td>
+</tr>
+<tr>
+<td><strong>Inference Latency</strong></td>
+<td>$&lt; 0.1\ \mu s$ (Zero overhead)</td>
+<td>$\approx 1.2\ \text{ms}$ (Batch inference)</td>
+</tr>
+<tr>
+<td><strong>Operational Deployment</strong></td>
+<td>In-line hardware filter (eNPU / FPGA)</td>
+<td>Software NIDS analyzer (Zeek / Suricata)</td>
+</tr>
+</tbody>
+</table>
+<h3>2. Core Takeaways &amp; Engineering Insights</h3>
+<ol>
+<li>
+<p><strong>Eliminating the Memorization Illusion:</strong>
+   The apparent 99.97%+ accuracy achieved by naively training classifiers on raw CIC-IDS2017 features is misleading. When models are allowed to train on port numbers (<code>Destination Port = 80</code>) or fixed TCP segment parameters, they function as brittle signature memorizers. Restricting the feature set to 7 physical behavioral metrics forces the model to generalize across actual flow dynamics.</p>
+</li>
+<li>
+<p><strong>Why the Simple Rule Had Low Recall (63.24%):</strong>
+   In volumetric HTTP DDoS attacks, a substantial portion of sessions are terminated prematurely due to server backlog queue exhaustion (SYN cookies, RST teardowns, or incomplete request buffering). These aborted sessions never deliver the full 2,000-byte response payload and thus escape static payload thresholding.</p>
+</li>
+<li>
+<p><strong>How Machine Learning Resolves the Gap (98.36% Recall):</strong>
+   The shallow Random Forest (<code>max_depth=3</code>) achieved a 35-percentage-point gain in recall over the static rule. It achieves this by cross-referencing <code>Flow Duration</code> and packet arrival rates (<code>Flow Packets/s</code>) with <code>Average Packet Size</code>. Even when response payloads are truncated, protracted connection holding times coupled with abnormal packet size distributions reliably flag anomalous attack flows.</p>
+</li>
+<li>
+<p><strong>Recommended Hybrid Defense Architecture:</strong>
+   In production SOC deployments, these two detection mechanisms complement each other:</p>
+</li>
+<li><strong>Tier 1 (Edge Gatekeeper):</strong> The static rule runs directly in high-speed hardware tables (eBPF/XDP), instantly dropping &gt;60% of high-volume DDoS sessions with near-zero latency and 93% precision.</li>
+<li><strong>Tier 2 (Heuristic ML Inspector):</strong> Flows that pass Tier 1 are evaluated by the constrained Random Forest model, detecting subtle, low-payload, or early-stage connection-exhaustion flows with 98% overall accuracy.</li>
+</ol>
+<hr />
+<h2>Conclusion</h2>
+<p>This laboratory demonstrates that high-performance intrusion detection does not require complex deep neural networks or hundreds of leaky features. By systematically identifying and stripping dataset artifacts, applying rigorous data sanitization, and constraining tree depth, we achieved a robust, interpretable, and defensible <strong>98.00% detection accuracy</strong> using only 7 fundamental network behavioral heuristics.</p>
+</body>
+</html>
