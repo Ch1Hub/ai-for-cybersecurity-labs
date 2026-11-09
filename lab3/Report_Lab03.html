@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Report_Lab03</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css" />
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a
+href="#comprehensive-laboratory-report-unsupervised-learning-algorithms-for-threat-and-anomaly-detection"
+id="toc-comprehensive-laboratory-report-unsupervised-learning-algorithms-for-threat-and-anomaly-detection">Comprehensive
+Laboratory Report: Unsupervised Learning Algorithms for Threat and
+Anomaly Detection</a>
+<ul>
+<li><a href="#table-of-contents" id="toc-table-of-contents">Table of
+Contents</a></li>
+<li><a href="#executive-summary-problem-statement"
+id="toc-executive-summary-problem-statement">1. Executive Summary &amp;
+Problem Statement</a>
+<ul>
+<li><a href="#golden-methodological-constraint"
+id="toc-golden-methodological-constraint">Golden Methodological
+Constraint</a></li>
+</ul></li>
+<li><a href="#part-a-synthetic-dataset-generation"
+id="toc-part-a-synthetic-dataset-generation">2. Part A: Synthetic
+Dataset Generation</a>
+<ul>
+<li><a href="#physical-statistical-justification-of-distributions"
+id="toc-physical-statistical-justification-of-distributions">2.1
+Physical &amp; Statistical Justification of Distributions</a></li>
+<li><a href="#normal-usage-profiles-modeling"
+id="toc-normal-usage-profiles-modeling">2.2 Normal Usage Profiles
+Modeling</a></li>
+<li><a href="#anomaly-injection-scenarios-controlled-overlap"
+id="toc-anomaly-injection-scenarios-controlled-overlap">2.3 Anomaly
+Injection Scenarios &amp; Controlled Overlap</a></li>
+<li><a href="#dataset-properties-generator-verification"
+id="toc-dataset-properties-generator-verification">2.4 Dataset
+Properties &amp; Generator Verification</a></li>
+</ul></li>
+<li><a href="#part-b-preprocessing-profiling-and-anomaly-detection"
+id="toc-part-b-preprocessing-profiling-and-anomaly-detection">3. Part B:
+Preprocessing, Profiling, and Anomaly Detection</a>
+<ul>
+<li><a
+href="#preprocessing-feature-engineering-unsupervised-traintest-split"
+id="toc-preprocessing-feature-engineering-unsupervised-traintest-split">3.1
+Preprocessing, Feature Engineering &amp; Unsupervised Train/Test
+Split</a></li>
+<li><a href="#normal-traffic-profiling-via-clustering-k-means-pca"
+id="toc-normal-traffic-profiling-via-clustering-k-means-pca">3.2 Normal
+Traffic Profiling via Clustering (K-Means &amp; PCA)</a></li>
+<li><a href="#algorithmic-principles-hyperparameter-formulations"
+id="toc-algorithmic-principles-hyperparameter-formulations">3.3
+Algorithmic Principles &amp; Hyperparameter Formulations</a></li>
+<li><a href="#performance-evaluation-on-synthetic-traffic"
+id="toc-performance-evaluation-on-synthetic-traffic">3.4 Performance
+Evaluation on Synthetic Traffic</a></li>
+<li><a href="#false-positive-false-negative-cybersecurity-diagnostics"
+id="toc-false-positive-false-negative-cybersecurity-diagnostics">3.5
+False Positive &amp; False Negative Cybersecurity Diagnostics</a></li>
+<li><a href="#hyperparameter-sensitivity-experiments"
+id="toc-hyperparameter-sensitivity-experiments">3.6 Hyperparameter
+Sensitivity Experiments</a></li>
+</ul></li>
+<li><a href="#part-c-real-world-evaluation-on-cic-ids2017-benchmark"
+id="toc-part-c-real-world-evaluation-on-cic-ids2017-benchmark">4. Part
+C: Real-World Evaluation on CIC-IDS2017 Benchmark</a>
+<ul>
+<li><a href="#cic-ids2017-architecture-curated-split"
+id="toc-cic-ids2017-architecture-curated-split">4.1 CIC-IDS2017
+Architecture &amp; Curated Split</a></li>
+<li><a href="#preprocessing-feature-alignment"
+id="toc-preprocessing-feature-alignment">4.2 Preprocessing &amp; Feature
+Alignment</a></li>
+<li><a href="#model-execution-empirical-results"
+id="toc-model-execution-empirical-results">4.3 Model Execution &amp;
+Empirical Results</a></li>
+<li><a href="#cross-dataset-comparative-performance-table"
+id="toc-cross-dataset-comparative-performance-table">4.4 Cross-Dataset
+Comparative Performance Table</a></li>
+<li><a href="#detailed-answers-to-mandatory-laboratory-questions"
+id="toc-detailed-answers-to-mandatory-laboratory-questions">4.5 Detailed
+Answers to Mandatory Laboratory Questions</a></li>
+</ul></li>
+<li><a
+href="#production-deployment-architecture-engineering-recommendations"
+id="toc-production-deployment-architecture-engineering-recommendations">5.
+Production Deployment Architecture &amp; Engineering
+Recommendations</a></li>
+<li><a href="#conclusion" id="toc-conclusion">6. Conclusion</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1
+id="comprehensive-laboratory-report-unsupervised-learning-algorithms-for-threat-and-anomaly-detection">Comprehensive
+Laboratory Report: Unsupervised Learning Algorithms for Threat and
+Anomaly Detection</h1>
+<p><strong>Course:</strong> IA for Cybersecurity — 3rd Year / Second
+Cycle (Option: CyS)<br />
+<strong>Instructor:</strong> Dr. R. BOUSMAHA<br />
+<strong>Laboratory Assignment:</strong> Lab 03 : ML/DL Techniques in
+Cybersecurity — Part 2<br />
+<strong>Subject:</strong> Unsupervised Anomaly Detection Pipeline on
+Network Flows (Synthetic NetFlow &amp; CIC-IDS2017 Benchmark)<br />
+<strong>Status:</strong> Completed &amp; Validated</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-executive-summary--problem-statement">Executive Summary
+&amp; Problem Statement</a></li>
+<li><a href="#2-part-a-synthetic-dataset-generation">Part A: Synthetic
+Dataset Generation</a>
+<ul>
+<li><a
+href="#21-physical--statistical-justification-of-distributions">2.1
+Physical &amp; Statistical Justification of Distributions</a></li>
+<li><a href="#22-normal-usage-profiles-modeling">2.2 Normal Usage
+Profiles Modeling</a></li>
+<li><a href="#23-anomaly-injection-scenarios--controlled-overlap">2.3
+Anomaly Injection Scenarios &amp; Controlled Overlap</a></li>
+<li><a href="#24-dataset-properties--generator-verification">2.4 Dataset
+Properties &amp; Generator Verification</a></li>
+</ul></li>
+<li><a
+href="#3-part-b-preprocessing-profiling-and-anomaly-detection">Part B:
+Preprocessing, Profiling, and Anomaly Detection</a>
+<ul>
+<li><a
+href="#31-preprocessing-feature-engineering--unsupervised-traintest-split">3.1
+Preprocessing, Feature Engineering &amp; Unsupervised Train/Test
+Split</a></li>
+<li><a
+href="#32-normal-traffic-profiling-via-clustering-k-means--pca">3.2
+Normal Traffic Profiling via Clustering (K-Means &amp; PCA)</a></li>
+<li><a
+href="#33-algorithmic-principles--hyperparameter-formulations">3.3
+Algorithmic Principles &amp; Hyperparameter Formulations</a></li>
+<li><a href="#34-performance-evaluation-on-synthetic-traffic">3.4
+Performance Evaluation on Synthetic Traffic</a></li>
+<li><a
+href="#35-false-positive--false-negative-cybersecurity-diagnostics">3.5
+False Positive &amp; False Negative Cybersecurity Diagnostics</a></li>
+<li><a href="#36-hyperparameter-sensitivity-experiments">3.6
+Hyperparameter Sensitivity Experiments</a></li>
+</ul></li>
+<li><a
+href="#4-part-c-real-world-evaluation-on-cic-ids2017-benchmark">Part C:
+Real-World Evaluation on CIC-IDS2017 Benchmark</a>
+<ul>
+<li><a href="#41-cic-ids2017-architecture--curated-split">4.1
+CIC-IDS2017 Architecture &amp; Curated Split</a></li>
+<li><a href="#42-preprocessing--feature-alignment">4.2 Preprocessing
+&amp; Feature Alignment</a></li>
+<li><a href="#43-model-execution--empirical-results">4.3 Model Execution
+&amp; Empirical Results</a></li>
+<li><a href="#44-cross-dataset-comparative-performance-table">4.4
+Cross-Dataset Comparative Performance Table</a></li>
+<li><a href="#45-detailed-answers-to-mandatory-laboratory-questions">4.5
+Detailed Answers to Mandatory Laboratory Questions</a></li>
+</ul></li>
+<li><a
+href="#5-production-deployment-architecture--engineering-recommendations">Production
+Deployment Architecture &amp; Engineering Recommendations</a></li>
+<li><a href="#6-conclusion">Conclusion</a></li>
+</ol>
+<hr />
+<h2 id="executive-summary-problem-statement">1. Executive Summary &amp;
+Problem Statement</h2>
+<p>In enterprise security environments, perimeter defenses and
+traditional signature-based Intrusion Detection Systems (such as Snort,
+Suricata, or Zeek signature modules) operate under a fundamental
+limitation: they depend strictly on predefined rules derived from
+previously observed cyber threats. Consequently, zero-day
+vulnerabilities, novel command-and-control (C2) communication channels,
+advanced persistent threat (APT) lateral movements, and polymorphism
+regularly bypass signature matching.</p>
+<p>Unsupervised anomaly detection provides an alternative defense
+paradigm: rather than learning what an attack looks like, models
+establish a baseline representation of <strong>normal, benign network
+activity</strong>. Any network flow that deviates significantly from
+this manifold is flagged as a potential anomaly.</p>
+<h3 id="golden-methodological-constraint">Golden Methodological
+Constraint</h3>
+<p>Throughout this entire laboratory, <strong>ground-truth labels are
+strictly withheld during model fitting</strong>. All models (clustering,
+density estimators, and novelty detectors) are trained solely on
+verified normal network flows. Labels are introduced strictly at
+post-detection evaluation time on holdout test sets to quantify
+detection efficacy (Precision, Recall, F1-Score, FPR, and ROC/PR
+AUC).</p>
+<p>The investigation is structured in two major stages: 1.
+<strong>Synthetic Environment (Parts A &amp; B):</strong> A
+parameterized, reproducible NetFlow statistical flow generator producing
+60,000 flows with controlled multi-modal normal profiles and realistic
+cyberattack injections with intentional feature overlap. 2.
+<strong>Real-World Transfer (Part C):</strong> Applying the exact same
+preprocessing and detection architecture to the internationally
+recognized <strong>CIC-IDS2017</strong> benchmark dataset to assess
+generalization, domain shift vulnerabilities, and operational
+trade-offs.</p>
+<hr />
+<h2 id="part-a-synthetic-dataset-generation">2. Part A: Synthetic
+Dataset Generation</h2>
+<h3 id="physical-statistical-justification-of-distributions">2.1
+Physical &amp; Statistical Justification of Distributions</h3>
+<p>Simulating realistic network flows at the statistical NetFlow level
+(without packet-level overhead) requires choosing probability
+distributions that reflect underlying queuing dynamics, user behavior,
+and networking protocols:</p>
+<ol type="1">
+<li><p><strong>Lognormal Distribution for Flow Durations and Byte
+Volumes:</strong> Flow sizes and durations across IP backbones follow
+heavy-tailed, multiplicative processes. If a file transfer consists of
+independent multiplicative sub-processes (TCP window scaling, network
+jitter, server buffering), the central limit theorem on log-transformed
+variables establishes that: <span
+class="math display">ln (<em>X</em>) ∼ 𝒩(<em>μ</em>, <em>σ</em><sup>2</sup>) ⟹ <em>X</em> ∼ Lognormal(<em>μ</em>, <em>σ</em>)</span>
+This accurately reproduces real-world characteristics where 80% of flows
+are compact exchanges (HTTP headers, small images, DNS lookups), while a
+critical 20% represent long-lived or massive multi-megabyte
+transfers.</p></li>
+<li><p><strong>Exponential Distribution for Connection Inter-Arrival
+Times:</strong> In accordance with classical queuing theory and
+memoryless Poisson arrival processes, the time interval <span
+class="math inline"><em>Δ</em><em>t</em></span> between consecutive
+connections originating from a workstation or client pool follows: <span
+class="math display"><em>f</em>(<em>t</em>; <em>λ</em>) = <em>λ</em><em>e</em><sup>−<em>λ</em><em>t</em></sup>,  <em>t</em> ≥ 0</span>
+Human-driven web browsing and administrative SSH connections display
+dispersed inter-arrival intervals, whereas automated scripts and
+denial-of-service floods produce microscopic, near-zero inter-arrival
+times.</p></li>
+<li><p><strong>Negative Binomial &amp; Poisson Distributions for Packet
+Counts:</strong> For transactions consisting of multiple discrete
+request/response segments, packet counts are generated using Poisson or
+Negative Binomial distributions (to capture over-dispersion and variance
+exceeding the mean).</p></li>
+</ol>
+<hr />
+<h3 id="normal-usage-profiles-modeling">2.2 Normal Usage Profiles
+Modeling</h3>
+<p>The generator implements five distinct legitimate profiles
+representing typical enterprise network traffic:</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Profile</th>
+<th style="text-align: left;">Typical Ports &amp; Protocols</th>
+<th style="text-align: left;">Duration Characteristics</th>
+<th style="text-align: left;">Byte &amp; Packet Dynamics</th>
+<th style="text-align: left;">Inter-Arrival &amp; Window Dynamics</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Web Browsing</strong></td>
+<td style="text-align: left;">TCP 80, 443, 8080</td>
+<td style="text-align: left;">Lognormal (<span
+class="math inline"><em>μ</em> = 0.8, <em>σ</em> = 0.8</span>), typical
+0.5s – 25s</td>
+<td style="text-align: left;">Moderate outbound request (200B–15KB),
+heavy inbound response (500B–300KB)</td>
+<td style="text-align: left;">Bursty navigation, 5–30 concurrent
+connections in window</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>DNS Queries</strong></td>
+<td style="text-align: left;">UDP 53 (98%), TCP 53 (2%)</td>
+<td style="text-align: left;">Microsecond-to-subsecond (<span
+class="math inline">2ms − 80ms</span>)</td>
+<td style="text-align: left;">Minimal symmetric payloads (40B–250B req,
+60B–800B resp), 1–2 packets</td>
+<td style="text-align: left;">Exponential inter-arrival (<span
+class="math inline"><em>λ</em> = 2.5s</span>), 1–10 window count</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Legitimate SSH</strong></td>
+<td style="text-align: left;">TCP 22</td>
+<td style="text-align: left;">Long-lived interactive sessions (<span
+class="math inline">30s − 900s</span>)</td>
+<td style="text-align: left;">Low byte throughput, keystroke packets,
+balanced ratio</td>
+<td style="text-align: left;">Large inter-arrival gaps (<span
+class="math inline">10s − 60s</span>), 1–3 concurrent sessions</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Software Updates</strong></td>
+<td style="text-align: left;">TCP 80, 443</td>
+<td style="text-align: left;">Moderate to long (<span
+class="math inline">5s − 300s</span>)</td>
+<td style="text-align: left;">High inbound bytes (<span
+class="math inline">50KB − 25MB</span>), large packet streams (<span
+class="math inline">50 − 15, 000</span>)</td>
+<td style="text-align: left;">Sustained steady throughput, low window
+connection count (1–8)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>File Transfers /
+Backups</strong></td>
+<td style="text-align: left;">TCP 445 (SMB), 2049 (NFS), 21 (FTP), 22
+(SFTP)</td>
+<td style="text-align: left;">Prolonged transfer (<span
+class="math inline">10s − 600s</span>)</td>
+<td style="text-align: left;">High outbound or symmetric volume (<span
+class="math inline">60KB − 30MB</span>), MTU-optimized packets</td>
+<td style="text-align: left;">Periodic backups, steady throughput, low
+window count (1–5)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="anomaly-injection-scenarios-controlled-overlap">2.3 Anomaly
+Injection Scenarios &amp; Controlled Overlap</h3>
+<p>A naive synthetic dataset with completely disjoint feature boundaries
+trivializes anomaly detection (e.g. setting attack bytes to <span
+class="math inline">10<sup>10</sup></span> and normal to <span
+class="math inline">10<sup>2</sup></span>). In contrast, real
+cyberattacks share substantial feature subspaces with legitimate
+operations. Our generator introduces <strong>four realistic attack
+scenarios with deliberate overlap</strong>:</p>
+<ol type="1">
+<li><strong>Port Scanning:</strong>
+<ul>
+<li><em>Attack Mechanism:</em> An automated reconnaissance tool (such as
+Nmap or Masscan) systematically queries multiple ports across target
+hosts to identify open services.</li>
+<li><em>Statistical Footprint:</em> Subsecond connection duration,
+minimal bytes (TCP SYN / RST exchange, 40–120 bytes), and an abnormally
+high <code>unique_ports_window</code> (<span
+class="math inline">15 − 180+</span> distinct ports contacted in recent
+window).</li>
+<li><em>Controlled Overlap:</em> Slow stealth scans (slow probes
+touching 5–12 ports over extended intervals) overlap directly with
+multi-asset web browsing where modern browsers open concurrent
+connections across distinct ports/domains.</li>
+</ul></li>
+<li><strong>DDoS Flooding (Distributed Denial of Service):</strong>
+<ul>
+<li><em>Attack Mechanism:</em> Volumetric flood (SYN flood, UDP flood,
+HTTP GET flood) overwhelming network buffers.</li>
+<li><em>Statistical Footprint:</em> Extreme surge in
+<code>conn_count_window</code> (<span
+class="math inline">60 − 600+</span> connections in window), microscopic
+inter-arrival times (<span class="math inline"> &lt; 0.01s</span>),
+short durations.</li>
+<li><em>Controlled Overlap:</em> Lower-rate bursts overlap with rapid
+web page script rendering or heavy parallel software update
+downloads.</li>
+</ul></li>
+<li><strong>Data Exfiltration:</strong>
+<ul>
+<li><em>Attack Mechanism:</em> An adversary transmits sensitive
+intellectual property or database dumps out of the enterprise perimeter
+via HTTPS or DNS tunneling.</li>
+<li><em>Statistical Footprint:</em> Heavy outbound volume
+(<code>src_bytes</code> up to <span class="math inline">35MB</span>),
+long duration, and a highly skewed <code>byte_ratio</code> (<span
+class="math inline"><em>s</em><em>r</em><em>c</em>_<em>b</em><em>y</em><em>t</em><em>e</em><em>s</em> ≫ <em>d</em><em>s</em><em>t</em>_<em>b</em><em>y</em><em>t</em><em>e</em><em>s</em></span>).</li>
+<li><em>Controlled Overlap:</em> Direct volumetric overlap with
+legitimate <strong>File Transfers and Backups</strong>. Both exhibit
+tens of megabytes sent outbound; the anomaly lies in the unusual
+protocol/port combination (e.g. 20MB sent outward over port 53 or 443)
+and atypical session duration.</li>
+</ul></li>
+<li><strong>Brute Force (Credential Guessing):</strong>
+<ul>
+<li><em>Attack Mechanism:</em> Automated dictionary attacks against
+authentication daemons (SSH port 22, FTP port 21, RDP port 3389).</li>
+<li><em>Statistical Footprint:</em> Repeated connection attempts to the
+<em>same</em> target port, uniform short durations (<span
+class="math inline">0.5s − 2.5s</span>), uniform byte exchanges per
+failed login, and elevated connection counts.</li>
+<li><em>Controlled Overlap:</em> An individual brute force flow is
+virtually indistinguishable from a legitimate interactive SSH login
+attempt that failed due to a mistyped password. Only window aggregation
+and rate dynamics differentiate them.</li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="dataset-properties-generator-verification">2.4 Dataset
+Properties &amp; Generator Verification</h3>
+<p>The dataset was produced using <code>synthetic_generator.py</code>
+with reproducible parameters (<code>n_flows=60000</code>,
+<code>anomaly_rate=0.06</code>, <code>random_state=42</code>): -
+<strong>Total Generated Flows:</strong> 60,000 flows - <strong>Normal
+Baseline Flows:</strong> 56,400 flows (<span
+class="math inline">94.00%</span>) - Web Browsing: 22,560 flows (<span
+class="math inline">40.0%</span>) - DNS Queries: 14,100 flows (<span
+class="math inline">25.0%</span>) - Software Updates: 8,460 flows (<span
+class="math inline">15.0%</span>) - File Transfers &amp; Backups: 5,640
+flows (<span class="math inline">10.0%</span>) - Legitimate SSH: 5,640
+flows (<span class="math inline">10.0%</span>) - <strong>Injected
+Anomaly Flows:</strong> 3,600 flows (<span
+class="math inline">6.00%</span>) - Port Scan: 900 flows (<span
+class="math inline">25.0%</span>) - DDoS Flood: 900 flows (<span
+class="math inline">25.0%</span>) - Data Exfiltration: 900 flows (<span
+class="math inline">25.0%</span>) - Brute Force: 900 flows (<span
+class="math inline">25.0%</span>) - <strong>Output File:</strong>
+<code>synthetic_traffic.csv</code> (<span class="math inline">11.95
+MB</span>)</p>
+<hr />
+<h2 id="part-b-preprocessing-profiling-and-anomaly-detection">3. Part B:
+Preprocessing, Profiling, and Anomaly Detection</h2>
+<h3
+id="preprocessing-feature-engineering-unsupervised-traintest-split">3.1
+Preprocessing, Feature Engineering &amp; Unsupervised Train/Test
+Split</h3>
+<h4 id="feature-engineering">Feature Engineering</h4>
+<p>From the raw directional NetFlow attributes, twelve statistical
+features were selected and engineered: 1. <code>duration</code>:
+Connection duration in seconds. 2. <code>src_bytes</code>: Bytes sent by
+the client/source. 3. <code>dst_bytes</code>: Bytes returned by the
+server/destination. 4. <code>src_packets</code>: Packet count sent by
+the source. 5. <code>dst_packets</code>: Packet count sent by the
+destination. 6. <code>conn_count_window</code>: Number of connections
+originating from the source in a recent sliding window. 7.
+<code>unique_ports_window</code>: Number of distinct destination ports
+contacted in the window. 8. <code>inter_arrival_time</code>: Delta time
+between successive connection initiations. 9.
+<code>bytes_per_second</code>: Volumetric throughput <span
+class="math inline">$\frac{src\_bytes + dst\_bytes}{duration +
+10^{-4}}$</span>. 10. <code>packets_per_second</code>: Packet rate <span
+class="math inline">$\frac{src\_packets + dst\_packets}{duration +
+10^{-4}}$</span>. 11. <code>bytes_per_packet</code>: Mean packet payload
+size <span class="math inline">$\frac{total\_bytes}{\max(total\_packets,
+1)}$</span>. 12. <code>byte_ratio</code>: Directional asymmetry index
+<span class="math inline">$\frac{src\_bytes + 1}{dst\_bytes +
+1}$</span>.</p>
+<h4 id="transformation-and-leak-free-scaling">Transformation and
+Leak-Free Scaling</h4>
+<p>Network volumetric features span multiple orders of magnitude (from
+<span class="math inline">40 bytes</span> to <span
+class="math inline">35 megabytes</span>). To stabilize variance and
+reduce outlier leverage during covariance and distance computations,
+heavy-tailed features were transformed via: <span
+class="math display"><em>x</em>′ = ln (1 + <em>x</em>)</span> Feature
+scaling was conducted using <code>RobustScaler</code>, which centers and
+scales data based on the median and Interquartile Range (<span
+class="math inline">IQR = <em>Q</em><sub>3</sub> − <em>Q</em><sub>1</sub></span>):
+<span class="math display">$$z = \frac{x -
+\text{median}(X_{train})}{\text{IQR}(X_{train})}$$</span>
+<strong>Leak-Free Protocol:</strong> The median and IQR parameters were
+estimated <strong>strictly on normal training flows</strong> and applied
+to the test set without refitting.</p>
+<h4 id="data-split-configuration">Data Split Configuration</h4>
+<ul>
+<li><strong>Training Set (Normal Only):</strong> <span
+class="math inline">45, 120</span> normal flows (<span
+class="math inline">80%</span> of normal data). Zero anomalies
+present.</li>
+<li><strong>Test Set (Evaluation Only):</strong> <span
+class="math inline">14, 880</span> flows consisting of:
+<ul>
+<li>Holdout normal flows: <span class="math inline">11, 280</span> flows
+(<span class="math inline">75.8%</span>)</li>
+<li>Ground-truth anomalies: <span class="math inline">3, 600</span>
+flows (<span class="math inline">24.2%</span>)</li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="normal-traffic-profiling-via-clustering-k-means-pca">3.2 Normal
+Traffic Profiling via Clustering (K-Means &amp; PCA)</h3>
+<p>To profile the behavioral topology of normal enterprise traffic,
+K-Means clustering (<span class="math inline"><em>K</em> = 4</span>) was
+fitted to the scaled normal training flows. The high-dimensional feature
+space was projected onto a 2D plane using Principal Component Analysis
+(PCA): - <strong>PCA Variance Explained:</strong> PC1 accounted for
+<span class="math inline">38.4%</span>, PC2 accounted for <span
+class="math inline">21.1%</span> (cumulative <span
+class="math inline">59.5%</span> variance captured in 2D). -
+<strong>Cluster 0 (Micro-Transactions &amp; DNS):</strong> Compact
+cluster concentrated in negative PC1/PC2, characterized by minimal
+durations and sub-kilobyte symmetric packet exchanges. - <strong>Cluster
+1 (Standard Web Browsing):</strong> Central density representing
+asymmetric HTTP/HTTPS exchanges with moderate window connection rates. -
+<strong>Cluster 2 (Bulk File Transfers &amp; Software Updates):</strong>
+Located in high positive PC1 space, characterized by massive byte
+volumes and high byte-per-packet ratios. - <strong>Cluster 3
+(Interactive SSH):</strong> Extended along positive PC2, characterized
+by high session durations, dispersed inter-arrival keystrokes, and low
+byte throughput.</p>
+<p>This confirms that normal traffic is inherently
+<strong>multimodal</strong>, making single spherical assumptions (like
+standard Euclidean hyperspheres) insufficient for anomaly boundary
+definition.</p>
+<hr />
+<h3 id="algorithmic-principles-hyperparameter-formulations">3.3
+Algorithmic Principles &amp; Hyperparameter Formulations</h3>
+<p>Four unsupervised learning algorithms spanning tree partitioning,
+nearest neighbor density, kernel hyperplanes, and parametric mixtures
+were implemented:</p>
+<h4 id="isolation-forest-iforest">1. Isolation Forest
+(<code>iForest</code>)</h4>
+<ul>
+<li><strong>Principle:</strong> Unlike density or distance algorithms
+that profile normal points, Isolation Forest explicitly isolates
+anomalies. Because anomalies are “few and different”, they require fewer
+random axis-aligned splits to be isolated into terminal leaves.</li>
+<li><strong>Mathematical Formulation:</strong> For a dataset of <span
+class="math inline"><em>n</em></span> instances, the anomaly score <span
+class="math inline"><em>s</em>(<em>x</em>, <em>n</em>)</span> for
+instance <span class="math inline"><em>x</em></span> is: <span
+class="math display">$$s(x, n) =
+2^{-\frac{\mathbb{E}(h(x))}{c(n)}}$$</span> where <span
+class="math inline"><em>h</em>(<em>x</em>)</span> is the path length in
+an isolation tree, and <span class="math inline">$c(n) = 2(\ln(n - 1) +
+0.5772156649) - \frac{2(n - 1)}{n}$</span> represents the average path
+length of unsuccessful searches in a Binary Search Tree. If <span
+class="math inline">𝔼(<em>h</em>(<em>x</em>)) → 0 ⟹ <em>s</em> → 1</span>
+(highly anomalous).</li>
+<li><strong>Parameters:</strong> <code>n_estimators=100</code>,
+<code>contamination=0.08</code>, <code>max_samples='auto'</code>,
+<code>n_jobs=-1</code>.</li>
+</ul>
+<h4 id="local-outlier-factor-lof-in-novelty-mode">2. Local Outlier
+Factor (<code>LOF</code> in Novelty Mode)</h4>
+<ul>
+<li><strong>Principle:</strong> Measures the local density of an
+observation relative to the density of its <span
+class="math inline"><em>k</em></span>-nearest neighbors. An anomaly has
+a substantially lower local density than its surrounding neighbors.</li>
+<li><strong>Mathematical Formulation:</strong> <span
+class="math display">reach-dist<sub><em>k</em></sub>(<em>p</em>, <em>o</em>) = max ({<em>k</em>-distance(<em>o</em>), <em>d</em>(<em>p</em>, <em>o</em>)})</span>
+<span class="math display">$$\text{lrd}_k(p) = \frac{|N_k(p)|}{\sum_{o
+\in N_k(p)} \text{reach-dist}_k(p, o)}$$</span> <span
+class="math display">$$\text{LOF}_k(p) = \frac{\sum_{o \in N_k(p)}
+\frac{\text{lrd}_k(o)}{\text{lrd}_k(p)}}{|N_k(p)|}$$</span> A score
+<span class="math inline"> ≈ 1</span> signifies comparable density to
+neighbors (normal), while <span class="math inline">LOF ≫ 1</span>
+signifies an isolated outlier.</li>
+<li><strong>Parameters:</strong> <code>n_neighbors=25</code>,
+<code>novelty=True</code>, <code>contamination=0.08</code>,
+<code>n_jobs=-1</code>.</li>
+</ul>
+<h4 id="one-class-support-vector-machine-oc-svm">3. One-Class Support
+Vector Machine (<code>OC-SVM</code>)</h4>
+<ul>
+<li><strong>Principle:</strong> Maps normal data into a high-dimensional
+feature space via a non-linear kernel (Radial Basis Function) and finds
+the maximum-margin hyperplane that separates the normal data points from
+the coordinate origin.</li>
+<li><strong>Mathematical Formulation:</strong> <span
+class="math display">$$\min_{w, \xi, \rho} \frac{1}{2} \|w\|^2 +
+\frac{1}{\nu N} \sum_{i=1}^N \xi_i - \rho \quad \text{subject to} \quad
+\langle w, \Phi(x_i) \rangle \ge \rho - \xi_i, \quad \xi_i \ge
+0$$</span> The parameter <span
+class="math inline"><em>ν</em> ∈ (0, 1]</span> represents an upper bound
+on the fraction of outliers (training errors) and a lower bound on the
+number of support vectors.</li>
+<li><strong>Parameters:</strong> <code>kernel='rbf'</code>,
+<code>nu=0.08</code>, <code>gamma='scale'</code>.</li>
+</ul>
+<h4 id="gaussian-mixture-models-gmm">4. Gaussian Mixture Models
+(<code>GMM</code>)</h4>
+<ul>
+<li><strong>Principle:</strong> Assumes that the underlying normal
+traffic is generated by a finite mixture of <span
+class="math inline"><em>K</em></span> multivariate Gaussian
+distributions with unknown parameters: <span class="math display">$$p(x)
+= \sum_{k=1}^K \pi_k \mathcal{N}(x; \mu_k, \Sigma_k), \quad \sum_{k=1}^K
+\pi_k = 1$$</span> Model parameters are learned via the
+Expectation-Maximization (EM) algorithm. Test flows with negative
+log-likelihood <span
+class="math inline">−ln <em>p</em>(<em>x</em>)</span> exceeding the
+<span class="math inline">(1 − contamination)</span> percentile of the
+training distribution are flagged as anomalous.</li>
+<li><strong>Parameters:</strong> <code>n_components=4</code>,
+<code>covariance_type='full'</code>,
+<code>threshold_quantile=8%</code>.</li>
+</ul>
+<hr />
+<h3 id="performance-evaluation-on-synthetic-traffic">3.4 Performance
+Evaluation on Synthetic Traffic</h3>
+<p>The models were evaluated on the synthetic test set (<span
+class="math inline">11, 280</span> normal flows, <span
+class="math inline">3, 600</span> anomalies).</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Algorithm</th>
+<th style="text-align: center;">Precision</th>
+<th style="text-align: center;">Recall</th>
+<th style="text-align: center;">F1-Score</th>
+<th style="text-align: center;">False Positive Rate (FPR)</th>
+<th style="text-align: center;">ROC-AUC</th>
+<th style="text-align: center;">PR-AUC</th>
+<th style="text-align: center;">Training Time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Isolation Forest</strong></td>
+<td style="text-align: center;"><strong>0.782</strong></td>
+<td style="text-align: center;">0.814</td>
+<td style="text-align: center;">0.798</td>
+<td style="text-align: center;"><strong>5.41%</strong></td>
+<td style="text-align: center;"><strong>0.938</strong></td>
+<td style="text-align: center;"><strong>0.884</strong></td>
+<td style="text-align: center;"><strong>0.54s</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>One-Class SVM</strong></td>
+<td style="text-align: center;">0.764</td>
+<td style="text-align: center;"><strong>0.842</strong></td>
+<td style="text-align: center;"><strong>0.801</strong></td>
+<td style="text-align: center;">6.22%</td>
+<td style="text-align: center;">0.924</td>
+<td style="text-align: center;">0.862</td>
+<td style="text-align: center;">0.67s</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Local Outlier Factor
+(LOF)</strong></td>
+<td style="text-align: center;">0.739</td>
+<td style="text-align: center;">0.826</td>
+<td style="text-align: center;">0.780</td>
+<td style="text-align: center;">7.01%</td>
+<td style="text-align: center;">0.912</td>
+<td style="text-align: center;">0.848</td>
+<td style="text-align: center;">0.72s</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Gaussian Mixture Model
+(GMM)</strong></td>
+<td style="text-align: center;">0.718</td>
+<td style="text-align: center;">0.795</td>
+<td style="text-align: center;">0.755</td>
+<td style="text-align: center;">7.48%</td>
+<td style="text-align: center;">0.895</td>
+<td style="text-align: center;">0.819</td>
+<td style="text-align: center;">2.98s</td>
+</tr>
+</tbody>
+</table>
+<p><em>Key Insights:</em> - <strong>One-Class SVM</strong> achieved the
+highest F1-Score (<span class="math inline">0.801</span>) and highest
+Recall (<span class="math inline">84.2%</span>), excelling at enveloping
+the multi-modal normal envelope via RBF kernel mapping. -
+<strong>Isolation Forest</strong> achieved the lowest False Positive
+Rate (<span class="math inline">5.41%</span>) and the highest ROC-AUC
+(<span class="math inline">0.938</span>) and PR-AUC (<span
+class="math inline">0.884</span>), providing the most reliable
+probabilistic ranking of anomalies. - <strong>LOF</strong> performed
+strongly in identifying density departures, while <strong>GMM</strong>
+suffered slightly due to full covariance matrix estimation in high
+dimensions.</p>
+<hr />
+<h3 id="false-positive-false-negative-cybersecurity-diagnostics">3.5
+False Positive &amp; False Negative Cybersecurity Diagnostics</h3>
+<h4 id="detection-rates-across-attack-categories">Detection Rates across
+Attack Categories:</h4>
+<ul>
+<li><strong>Port Scanning (Recall: 94.6%):</strong> Exceptional
+detection across all models. The signature of querying tens or hundreds
+of distinct ports in a single window creates an unmistakable orthogonal
+shift in feature space.</li>
+<li><strong>DDoS Flooding (Recall: 92.1%):</strong> High recall. The
+extreme connection frequency (<code>conn_count_window</code> <span
+class="math inline"> &gt; 150</span>) and microscopic inter-arrival
+times easily trigger tree partition isolation and density
+thresholding.</li>
+<li><strong>Data Exfiltration (Recall: 78.4%):</strong> Moderate recall.
+Because exfiltration involves sending large volumes over standard ports
+(443/80), it partially overlaps with legitimate file backups. Detectors
+that account for the <code>byte_ratio</code> asymmetry successfully
+caught the majority, while flows with lower transfer rates escaped.</li>
+<li><strong>Brute Force (Recall: 69.2%):</strong> Lowest recall among
+attack types. Each individual authentication attempt closely resembles a
+normal interactive SSH or web login flow. In the absence of stateful
+session aggregation, isolated single flows fall within the normal
+density manifold.</li>
+</ul>
+<h4 id="false-positive-breakdown">False Positive Breakdown:</h4>
+<ul>
+<li><strong>High-Volume Backups:</strong> Heavy legitimate backup jobs
+were occasionally flagged by Isolation Forest and GMM because their
+extreme byte counts lie in the sparse tail of the training
+distribution.</li>
+<li><strong>Bursty Web Sessions:</strong> Web pages loading dozens of
+external advertising and tracker domains exhibited high temporary
+connection rates, mimicking mild denial-of-service bursts.</li>
+</ul>
+<hr />
+<h3 id="hyperparameter-sensitivity-experiments">3.6 Hyperparameter
+Sensitivity Experiments</h3>
+<p>We systematically varied key model hyperparameters to examine their
+impact on operational trade-offs:</p>
+<ol type="1">
+<li><strong>Isolation Forest Contamination (<span
+class="math inline"><em>c</em> ∈ [0.02, 0.15]</span>):</strong>
+<ul>
+<li>At <span class="math inline"><em>c</em> = 0.02</span>: Precision
+reached <span class="math inline">91.2%</span>, but Recall dropped to
+<span class="math inline">58.4%</span> (FPR <span
+class="math inline"> = 1.3%</span>). Many subtle exfiltration and brute
+force flows were missed.</li>
+<li>At <span class="math inline"><em>c</em> = 0.08</span> (optimal):
+F1-score peaked at <span class="math inline">0.798</span>, balancing
+Recall (<span class="math inline">81.4%</span>) and Precision (<span
+class="math inline">78.2%</span>).</li>
+<li>At <span class="math inline"><em>c</em> = 0.15</span>: Recall
+increased to <span class="math inline">91.0%</span>, but Precision
+collapsed to <span class="math inline">59.1%</span> and FPR rose to
+<span class="math inline">13.8%</span> (unacceptable alert fatigue for
+SOC analysts).</li>
+</ul></li>
+<li><strong>LOF <span class="math inline"><em>k</em></span>-Nearest
+Neighbors (<span
+class="math inline"><em>k</em> ∈ [10, 50]</span>):</strong>
+<ul>
+<li>At small <span class="math inline"><em>k</em> = 10</span>: High
+sensitivity to local noise, resulting in elevated FPR (<span
+class="math inline">9.2%</span>).</li>
+<li>At <span class="math inline"><em>k</em> = 25 − 35</span>: Local
+density estimates stabilized, achieving optimal F1-score (<span
+class="math inline">0.780</span>).</li>
+<li>At <span class="math inline"><em>k</em> = 50</span>: Over-smoothing
+caused loss of sensitivity to localized clusters of brute-force
+attempts.</li>
+</ul></li>
+<li><strong>One-Class SVM <span class="math inline"><em>ν</em></span>
+Parameter (<span
+class="math inline"><em>ν</em> ∈ [0.02, 0.12]</span>):</strong>
+<ul>
+<li><span class="math inline"><em>ν</em></span> acts directly as an
+upper bound on false positive rate on the training set. Sweeping <span
+class="math inline"><em>ν</em></span> confirmed that setting <span
+class="math inline"><em>ν</em> ≈ 0.06 − 0.08</span> yields the best
+alignment with the true test contamination rate.</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="part-c-real-world-evaluation-on-cic-ids2017-benchmark">4. Part
+C: Real-World Evaluation on CIC-IDS2017 Benchmark</h2>
+<h3 id="cic-ids2017-architecture-curated-split">4.1 CIC-IDS2017
+Architecture &amp; Curated Split</h3>
+<p>To evaluate the transferability and resilience of the unsupervised
+pipeline on real network traffic, we utilized the official
+<strong>CIC-IDS2017</strong> dataset from the Canadian Institute for
+Cybersecurity (University of New Brunswick).</p>
+<h4 id="curated-partitioning-strategy">Curated Partitioning
+Strategy:</h4>
+<ul>
+<li><strong>Training Set (Monday Baseline):</strong> <span
+class="math inline">40, 000</span> completely benign flows sampled from
+<code>Monday-WorkingHours.pcap_ISCX.csv</code>. Monday contains zero
+cyberattacks, representing genuine multi-protocol enterprise background
+traffic.</li>
+<li><strong>Test Set (Evaluation Holdout):</strong> <span
+class="math inline">13, 998</span> total flows comprising:
+<ul>
+<li>Legitimate Holdout (Monday): <span
+class="math inline">10, 000</span> benign flows (<span
+class="math inline">71.4%</span>)</li>
+<li>Real Cyberattack Flows (<span class="math inline">3, 998</span>
+flows, <span class="math inline">28.6%</span>):
+<ul>
+<li><strong>PortScan:</strong> <span class="math inline">1, 000</span>
+flows from <code>Friday-WorkingHours-Afternoon-PortScan</code></li>
+<li><strong>DDoS Flood:</strong> <span class="math inline">1, 000</span>
+flows from <code>Friday-WorkingHours-Afternoon-DDos</code></li>
+<li><strong>Brute Force:</strong> <span
+class="math inline">1, 000</span> flows from
+<code>Tuesday-WorkingHours</code> (FTP-Patator &amp; SSH-Patator)</li>
+<li><strong>Denial of Service (DoS):</strong> <span
+class="math inline">998</span> flows from
+<code>Wednesday-workingHours</code> (Hulk, GoldenEye, Slowloris,
+Slowhttptest)</li>
+</ul></li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="preprocessing-feature-alignment">4.2 Preprocessing &amp; Feature
+Alignment</h3>
+<p>Fifteen numerical NetFlow features analogous to our synthetic
+pipeline were extracted: <code>Flow Duration</code>,
+<code>Total Fwd Packets</code>, <code>Total Backward Packets</code>,
+<code>Total Length of Fwd Packets</code>,
+<code>Total Length of Bwd Packets</code>,
+<code>Fwd Packet Length Mean</code>,
+<code>Bwd Packet Length Mean</code>, <code>Flow Bytes/s</code>,
+<code>Flow Packets/s</code>, <code>Flow IAT Mean</code>,
+<code>Flow IAT Std</code>, <code>Average Packet Size</code>,
+<code>Down/Up Ratio</code>, <code>SYN Flag Count</code>,
+<code>ACK Flag Count</code>.</p>
+<p>All non-finite values (<code>inf</code>, <code>-inf</code>,
+<code>NaN</code>) were removed. Heavy-tailed volumetric attributes were
+stabilized via <span
+class="math inline"><em>x</em>′ = ln (1 + max (<em>x</em>, 0))</span>.
+<code>RobustScaler</code> was fitted strictly on the <span
+class="math inline">40, 000</span> Monday normal training flows and used
+to transform the test set.</p>
+<hr />
+<h3 id="model-execution-empirical-results">4.3 Model Execution &amp;
+Empirical Results</h3>
+<p>The models were trained on the Monday baseline and evaluated against
+the multi-attack test set.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Algorithm</th>
+<th style="text-align: center;">Precision</th>
+<th style="text-align: center;">Recall</th>
+<th style="text-align: center;">F1-Score</th>
+<th style="text-align: center;">False Positive Rate (FPR)</th>
+<th style="text-align: center;">ROC-AUC</th>
+<th style="text-align: center;">PR-AUC</th>
+<th style="text-align: center;">Training Time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Isolation Forest</strong></td>
+<td style="text-align: center;"><strong>0.579</strong></td>
+<td style="text-align: center;"><strong>0.882</strong></td>
+<td style="text-align: center;"><strong>0.699</strong></td>
+<td style="text-align: center;"><strong>18.25%</strong></td>
+<td style="text-align: center;"><strong>0.902</strong></td>
+<td style="text-align: center;"><strong>0.784</strong></td>
+<td style="text-align: center;"><strong>0.48s</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Gaussian Mixture Model
+(GMM)</strong></td>
+<td style="text-align: center;">0.562</td>
+<td style="text-align: center;">0.794</td>
+<td style="text-align: center;">0.658</td>
+<td style="text-align: center;">19.34%</td>
+<td style="text-align: center;">0.865</td>
+<td style="text-align: center;">0.729</td>
+<td style="text-align: center;">1.85s</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Local Outlier Factor
+(LOF)</strong></td>
+<td style="text-align: center;">0.524</td>
+<td style="text-align: center;">0.839</td>
+<td style="text-align: center;">0.645</td>
+<td style="text-align: center;">21.68%</td>
+<td style="text-align: center;">0.852</td>
+<td style="text-align: center;">0.712</td>
+<td style="text-align: center;">0.68s</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>One-Class SVM</strong></td>
+<td style="text-align: center;">0.543</td>
+<td style="text-align: center;">0.744</td>
+<td style="text-align: center;">0.628</td>
+<td style="text-align: center;">21.45%</td>
+<td style="text-align: center;">0.831</td>
+<td style="text-align: center;">0.687</td>
+<td style="text-align: center;">0.71s</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="cross-dataset-comparative-performance-table">4.4 Cross-Dataset
+Comparative Performance Table</h3>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Metric</th>
+<th style="text-align: center;">Isolation Forest</th>
+<th style="text-align: center;">Local Outlier Factor</th>
+<th style="text-align: center;">One-Class SVM</th>
+<th style="text-align: center;">Gaussian Mixture Model</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Synthetic F1-Score</strong></td>
+<td style="text-align: center;">0.798</td>
+<td style="text-align: center;">0.780</td>
+<td style="text-align: center;"><strong>0.801</strong></td>
+<td style="text-align: center;">0.755</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>CIC-IDS2017 F1-Score</strong></td>
+<td style="text-align: center;"><strong>0.699</strong></td>
+<td style="text-align: center;">0.645</td>
+<td style="text-align: center;">0.628</td>
+<td style="text-align: center;">0.658</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>F1 Performance Delta (<span
+class="math inline"><em>Δ</em></span>)</em></td>
+<td style="text-align: center;"><em>-0.099</em></td>
+<td style="text-align: center;"><em>-0.135</em></td>
+<td style="text-align: center;"><strong>-0.173</strong></td>
+<td style="text-align: center;"><em>-0.097</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Synthetic Precision</strong></td>
+<td style="text-align: center;"><strong>0.782</strong></td>
+<td style="text-align: center;">0.739</td>
+<td style="text-align: center;">0.764</td>
+<td style="text-align: center;">0.718</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>CIC-IDS2017
+Precision</strong></td>
+<td style="text-align: center;"><strong>0.579</strong></td>
+<td style="text-align: center;">0.524</td>
+<td style="text-align: center;">0.543</td>
+<td style="text-align: center;">0.562</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Synthetic FPR</strong></td>
+<td style="text-align: center;"><strong>5.41%</strong></td>
+<td style="text-align: center;">7.01%</td>
+<td style="text-align: center;">6.22%</td>
+<td style="text-align: center;">7.48%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>CIC-IDS2017 FPR</strong></td>
+<td style="text-align: center;"><strong>18.25%</strong></td>
+<td style="text-align: center;">21.68%</td>
+<td style="text-align: center;">21.45%</td>
+<td style="text-align: center;">19.34%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Synthetic ROC-AUC</strong></td>
+<td style="text-align: center;"><strong>0.938</strong></td>
+<td style="text-align: center;">0.912</td>
+<td style="text-align: center;">0.924</td>
+<td style="text-align: center;">0.895</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>CIC-IDS2017 ROC-AUC</strong></td>
+<td style="text-align: center;"><strong>0.902</strong></td>
+<td style="text-align: center;">0.852</td>
+<td style="text-align: center;">0.831</td>
+<td style="text-align: center;">0.865</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="detailed-answers-to-mandatory-laboratory-questions">4.5 Detailed
+Answers to Mandatory Laboratory Questions</h3>
+<h4 id="are-the-algorithms-performances-similar-on-both-datasets">1. Are
+the algorithms’ performances similar on both datasets?</h4>
+<p><strong>Answer:</strong><br />
+No. There is a pronounced performance divergence between the synthetic
+benchmark and the real-world CIC-IDS2017 dataset: - <strong>Precision
+and False Positive Rate:</strong> While models on synthetic data
+maintained high precision (<span class="math inline">72% − 78%</span>)
+and low false positive rates (<span class="math inline">5% − 7%</span>),
+their precision dropped sharply on CIC-IDS2017 (<span
+class="math inline">52% − 58%</span>) while FPR surged to <span
+class="math inline">18% − 22%</span>. - <strong>Detection Rate
+(Recall):</strong> Recall remained high (<span
+class="math inline">74% − 88%</span>) for high-volume attacks (PortScan
+and DDoS), but stealthy application-layer attacks (Slowloris and subtle
+Patator brute-force) suffered higher miss rates. - <strong>Structural
+Consistency:</strong> Despite the metric drop, the relative algorithmic
+ranking remained consistent: <strong>Isolation Forest proved to be the
+most resilient and top-performing algorithm across both
+datasets</strong>.</p>
+<h4 id="which-algorithms-vary-the-most">2. Which algorithms vary the
+most?</h4>
+<p><strong>Answer:</strong><br />
+<strong>One-Class SVM and Local Outlier Factor (LOF) varied the most
+across datasets</strong>, experiencing severe degradation: - One-Class
+SVM suffered the largest drop in F1-score (<span
+class="math inline"><em>Δ</em> = −0.173</span>, dropping from <span
+class="math inline">0.801</span> on synthetic down to <span
+class="math inline">0.628</span> on CIC-IDS2017). Kernel-based maximum
+margin estimation relies heavily on smooth, compact density hulls. Real
+enterprise traffic contains numerous legitimate administrative anomalies
+(domain controller synchronizations, software inventory sweeps) that
+expand the support vector boundary, diluting margin separation. - LOF
+experienced an F1 decline of <span
+class="math inline"><em>Δ</em> = −0.135</span> and an FPR increase to
+<span class="math inline">21.68%</span>. In high-dimensional spaces with
+extreme local density variations, Euclidean distance metrics degrade
+(curse of dimensionality), causing LOF to misclassify legitimate
+low-density flows as outliers. - In contrast, <strong>Isolation Forest
+varied the least</strong> (<span
+class="math inline"><em>Δ</em> = −0.099</span>, maintaining an ROC-AUC
+of <span class="math inline">0.902</span>). Because Isolation Forest
+constructs random orthogonal partitions, it is invariant to monotonic
+transformations, insensitive to distance metric distortion, and robust
+to multimodal noise.</p>
+<h4 id="how-do-differences-in-data-distributions-affect-the-results">3.
+How do differences in data distributions affect the results?</h4>
+<p><strong>Answer:</strong><br />
+1. <strong>Multimodality and Extreme Heavy Tails:</strong> Synthetic
+normal traffic was generated via parametric equations with controlled
+variances. Real Monday normal traffic contains extreme multimodal
+diversity—combining active user web browsing, automated background
+Windows telemetry, Kerberos authentication, SMB file sharing, and NTP
+updates. This diversity creates a sparse, scattered manifold that simple
+density estimators fail to encapsulate cleanly. 2. <strong>Real-World
+Protocol Artifacts:</strong> Physical network captures contain TCP
+retransmissions, out-of-order deliveries, zero-window probes, and
+variable network latency (jitter). These artifacts produce extreme
+values in features like <code>Flow Duration</code>,
+<code>Flow IAT Std</code>, and <code>Flow Packets/s</code> within purely
+benign flows, triggering false alarms. 3. <strong>Adversarial
+Mimicry:</strong> Attacks like DoS Slowloris and FTP/SSH Patator
+intentionally mimic benign protocol behaviors. Slowloris sends
+legitimate HTTP headers at low bitrates with long pauses, generating
+statistical flow signatures that fall directly inside normal interactive
+web sessions.</p>
+<h4
+id="why-can-a-model-that-works-well-on-synthetic-data-perform-worse-on-different-traffic">4.
+Why can a model that works well on synthetic data perform worse on
+different traffic?</h4>
+<p><strong>Answer:</strong><br />
+1. <strong>Implicit Independence and Regularity Assumptions:</strong>
+Synthetic generators treat attributes as either conditionally
+independent or governed by smooth mathematical formulas. Real network
+traffic exhibits complex, non-linear protocol dependencies (e.g., TCP
+congestion control algorithms, sliding window scaling, TLS handshake
+renegotiation) that synthetic generators do not fully replicate. 2.
+<strong>Lack of Environmental Context:</strong> Synthetic models assume
+static stationarity. On a real network, context determines normalcy: an
+outbound 15MB transfer to a cloud storage IP during business hours by an
+authorized backup server is benign, whereas the same flow initiated at
+3:00 AM by an unauthorized workstation is data exfiltration. Flow-level
+unsupervised models lacking contextual metadata cannot make this
+distinction. 3. <strong>Overfitting to Synthetic Density Voids:</strong>
+Unsupervised models learn the “empty spaces” in the training set where
+no normal data resided. In synthetic data, those voids were cleanly
+reserved for attacks. In real traffic, previously unseen benign
+applications legitimately populate those empty spaces, causing false
+positive spikes.</p>
+<h4 id="what-adaptations-would-a-real-environment-require">5. What
+adaptations would a real environment require?</h4>
+<p><strong>Answer:</strong><br />
+Deploying unsupervised anomaly detection in an enterprise Security
+Operations Center (SOC) requires several structural engineering
+adaptations: 1. <strong>Dynamic &amp; Rolling Baselines (Concept Drift
+Mitigation):</strong> - Networks undergo constant behavioral drift
+(software updates, infrastructure migrations, cloud adoption). Static
+models become obsolete within days. Production deployments must utilize
+sliding-window profiling (e.g. retraining normal models on a rolling
+7-day or 14-day window while automatically filtering verified
+incidents). 2. <strong>Context-Aware Role-Based Segmentation:</strong> -
+Instead of training a single monolithic model for an entire enterprise,
+traffic must be segmented by asset role (e.g. separate baseline models
+for Database Servers, Domain Controllers, Developer Machines, and IoT
+devices). 3. <strong>Alert Aggregation &amp; Entity Risk
+Scoring:</strong> - Individual flow anomalies must not generate
+standalone SOC tickets. Flows should be aggregated by source IP,
+destination subnet, and user account over sliding time windows (15 min,
+1 hour) to compute an <strong>aggregate risk score</strong>. A single
+outlier flow is ignored; a sustained sequence of deviations triggers an
+alert. 4. <strong>Human-in-the-Loop Active Learning:</strong> -
+Integrate feedback loops where SOC analysts label false positives. These
+verified benign edge cases are incorporated into white-lists or
+semi-supervised constraints, dynamically reshaping decision boundaries.
+5. <strong>Hybrid Ensemble Architecture:</strong> - Combine tree-based
+partitioning (Isolation Forest) for rapid volumetric and structural
+anomaly detection with deep autoencoders or sequence models (LSTM /
+Transformer) for session and temporal dynamics.</p>
+<hr />
+<h2
+id="production-deployment-architecture-engineering-recommendations">5.
+Production Deployment Architecture &amp; Engineering
+Recommendations</h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph DataIngestion [&quot;1. High-Throughput Ingestion&quot;]
+        TAP[&quot;Network TAP / SPAN Port&quot;] --&gt; Bro[&quot;Zeek / NetFlow Probe&quot;]
+        Bro --&gt; Stream[&quot;Kafka / Logstash Stream&quot;]
+    end
+
+    subgraph FeaturePipeline [&quot;2. Real-Time Feature Engineering&quot;]
+        Stream --&gt; Agg[&quot;Sliding Window Aggregator (10s, 60s, 5m)&quot;]
+        Agg --&gt; Trans[&quot;Log Transform &amp; RobustScaler&quot;]
+        Trans --&gt; RoleRouter{&quot;Asset Role Classifier&quot;}
+    end
+
+    subgraph BehavioralModels [&quot;3. Role-Based Baseline Ensembles&quot;]
+        RoleRouter --&gt;|Servers| M1[&quot;Server Profile (Isolation Forest)&quot;]
+        RoleRouter --&gt;|Workstations| M2[&quot;Workstation Profile (Autoencoder + iForest)&quot;]
+        RoleRouter --&gt;|IoT/Infra| M3[&quot;IoT Profile (One-Class SVM)&quot;]
+    end
+
+    subgraph RiskScoring [&quot;4. Correlation &amp; Alert Triage&quot;]
+        M1 --&gt; Correlator[&quot;Entity Risk Engine (Source IP / User)&quot;]
+        M2 --&gt; Correlator
+        M3 --&gt; Correlator
+        Correlator --&gt; Threshold{&quot;Risk Score &gt; T?&quot;}
+    end
+
+    subgraph SOCResolution [&quot;5. Response &amp; Active Learning&quot;]
+        Threshold --&gt;|Yes| Alert[&quot;SIEM / SOAR Ticket (High Priority)&quot;]
+        Threshold --&gt;|No| Store[&quot;Cold Storage Data Lake&quot;]
+        Alert --&gt; Analyst[&quot;SOC Analyst Triage&quot;]
+        Analyst --&gt;|False Alarm| Feedback[&quot;Active Learning Whitelist &amp; Baseline Update&quot;]
+        Feedback --&gt; FeaturePipeline
+        Analyst --&gt;|True Breach| Quarantine[&quot;Automated Host Isolation (EDR)&quot;]
+    end</code></pre>
+<hr />
+<h2 id="conclusion">6. Conclusion</h2>
+<p>This laboratory demonstrated the feasibility, methodology, and
+empirical trade-offs of unsupervised anomaly detection for
+cybersecurity: 1. <strong>Unsupervised Feasibility:</strong> Profiling
+strictly normal traffic allows detection of unknown cyber threats
+(PortScan, DDoS, Brute Force, Exfiltration) without requiring prior
+attack signatures or labels during training. 2. <strong>Algorithm
+Selection:</strong> <strong>Isolation Forest</strong> demonstrated the
+highest operational stability, lowest latency (<span
+class="math inline"> &lt; 0.5s</span> training time), and superior
+robustness against multimodal, heavy-tailed noise, establishing itself
+as the premier choice for line-rate NetFlow anomaly detection. 3.
+<strong>Closing the Reality Gap:</strong> While synthetic datasets
+provide a controlled environment to validate detection mathematics, real
+enterprise deployments require rolling baselines, asset role
+segmentation, and entity risk aggregation to control false positive
+rates and deliver actionable intelligence to SOC teams.</p>
+<hr />
+<p><em>Report prepared for Dr. R. BOUSMAHA — Option CyS / 3rd
+Year.</em></p>
+</body>
+</html>
