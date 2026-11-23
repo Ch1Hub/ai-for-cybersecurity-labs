@@ -36,4 +36,4 @@ Random-forest detection compared with a hand-written rule engine, including conf
 - Open the notebook with Jupyter: `jupyter notebook`.
 
 ---
-*Part of the [CyberSec at ESI](../../../README.md) archive — published for study and portfolio purposes. Do not run offensive material outside an isolated lab.*
+*Part of the [ai-for-cybersecurity-labs](../README.md) repository — published for study and portfolio purposes. Do not run offensive material outside an isolated lab.*

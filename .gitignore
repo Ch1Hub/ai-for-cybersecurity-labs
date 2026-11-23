@@ -1,0 +1,32 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# Dependencies and caches
+node_modules/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+.env
+.env.*
+
+# Never publish VM disks or secrets
+*.vmdk
+*.vdi
+*.qcow2
+*.ova
+*.iso
+*.key
+*.pem
+
+# Large local artefacts
+*.AppImage
+squashfs-root/

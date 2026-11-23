@@ -1,27 +1,33 @@
-# AI for Cybersecurity
+# AI for Cybersecurity Labs
 
-Applied machine learning for detection engineering: supervised intrusion detection, rule-versus-ML comparison and unsupervised anomaly detection.
+Applied machine learning for detection engineering, from the final year of the cybersecurity engineering cycle at **ESI SBA**. Three complete labs cover supervised intrusion detection, a head-to-head comparison of ML and hand-written rules, and unsupervised anomaly detection.
 
-**Level:** Final year (5th year)  
-**Tools:** Python, scikit-learn, pandas, XGBoost, Jupyter
+**3 labs · scikit-learn · pandas · Jupyter · UNSW-NB15 · CICIDS2017**
 
-> Three complete labs with reports and notebooks.
+## What is inside
 
-## Labs
-
-| Lab | What it covers | Status |
+| Lab | Topic | Deliverables |
 | --- | --- | --- |
-| [Lab 1 — Intrusion detection on UNSW-NB15](lab1/) | Exploratory analysis, preprocessing and ML classification of the UNSW-NB15 dataset, with a full report and explained code. | ✅ Lab work archived |
-| [Lab 2 — ML versus rule-based detection](lab2/) | Random-forest detection compared with a hand-written rule engine, including confusion matrices and feature importance. | ✅ Lab work archived |
-| [Lab 3 — Unsupervised anomaly detection](lab3/) | Unsupervised anomaly detection on CICIDS2017 with a curated feature set, synthetic traffic and a full lab report. | ✅ Lab work archived |
+| [Lab 1](lab1/) | Intrusion detection on UNSW-NB15 | Preprocessing, model comparison, `CODE_EXPLAINED.md`, full report |
+| [Lab 2](lab2/) | ML versus rule-based detection | Random forest and rule engine, confusion matrices, feature importance |
+| [Lab 3](lab3/) | Unsupervised anomaly detection | CICIDS2017 curated features, synthetic traffic generator, full report |
 
-## Additional material
+Every lab includes a notebook, an executed report (PDF/HTML/Markdown) and the figures needed to read the results. The raw CICIDS2017 CSVs (1.2 GB) are not included; the curated feature set and the notebook that builds it are.
 
-| Path | Type |
-| --- | --- |
-| [lab1/](lab1/) | Directory (11 files) |
-| [lab2/](lab2/) | Directory (12 files) |
-| [lab3/](lab3/) | Directory (11 files) |
+## Reproducing
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install jupyter pandas scikit-learn matplotlib seaborn
+jupyter notebook
+```
+
+The notebooks are self-contained and use relative data paths. Large training sets can be obtained from their public sources (UNSW-NB15, CICIDS2017).
+
+## About the archive
+
+Split from the larger [`CyberSec at ESI`](https://github.com/Ch1Hub/CyberSec-at-ESI) archive with dated history (October–November 2026).
 
 ---
-*Part of the [CyberSec at ESI](../../README.md) archive.*
+
+*Published for study and portfolio purposes.*

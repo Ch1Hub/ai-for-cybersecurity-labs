@@ -34,4 +34,4 @@ Exploratory analysis, preprocessing and ML classification of the UNSW-NB15 datas
 - Open the notebook with Jupyter: `jupyter notebook`.
 
 ---
-*Part of the [CyberSec at ESI](../../../README.md) archive — published for study and portfolio purposes. Do not run offensive material outside an isolated lab.*
+*Part of the [ai-for-cybersecurity-labs](../README.md) repository — published for study and portfolio purposes. Do not run offensive material outside an isolated lab.*

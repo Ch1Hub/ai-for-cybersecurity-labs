@@ -35,4 +35,4 @@ Unsupervised anomaly detection on CICIDS2017 with a curated feature set, synthet
 - Open the notebook with Jupyter: `jupyter notebook`.
 
 ---
-*Part of the [CyberSec at ESI](../../../README.md) archive — published for study and portfolio purposes. Do not run offensive material outside an isolated lab.*
+*Part of the [ai-for-cybersecurity-labs](../README.md) repository — published for study and portfolio purposes. Do not run offensive material outside an isolated lab.*
